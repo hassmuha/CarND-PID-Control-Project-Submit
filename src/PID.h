@@ -1,6 +1,9 @@
 #ifndef PID_H
 #define PID_H
 
+#define N_PARAMS	3
+
+
 class PID {
 public:
   /*
@@ -20,6 +23,22 @@ public:
   double Kd;
 
   /*
+  * Twiddle
+  */
+  int iter;
+  int CoefUpdate;
+  double total_sq_error;
+  int SteadyState;
+
+  double best_error;
+  double dp_sum;
+  int param_idx;
+  int last_state;
+  int next_state;
+  double params[N_PARAMS];
+  double d_params[N_PARAMS];
+
+  /*
   * Constructor
   */
   PID();
@@ -35,6 +54,11 @@ public:
   void Init(double Kp_value, double Ki_value, double Kd_value);
 
   /*
+  * Initialize Twiddle.
+  */
+  void TwiddleInit(double *d_params_);
+
+  /*
   * Update the PID error variables given cross track error.
   */
   void UpdateError(double cte);
@@ -43,6 +67,13 @@ public:
   * Calculate the total PID error.
   */
   double TotalError();
+
+  /*
+  * Calculate the Paramerter optimization using Twiddle.
+  */
+  void Twiddle(double tol, double mcte);
+  //tol = tolerance
+  //mcte = mean cte
 };
 
 #endif /* PID_H */

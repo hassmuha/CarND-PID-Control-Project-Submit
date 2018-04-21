@@ -34,7 +34,10 @@ int main()
 
   PID pid;
   // TODO: Initialize the pid variable.
-  pid.Init(1.,1.,1.);
+  pid.Init(.15,.0001,1.5);
+  pid.CoefUpdate = 50;
+  double d_params[3] = {.02,.00005,.2};
+  pid.TwiddleInit(d_params);
 
 
   h.onMessage([&pid](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
@@ -61,7 +64,7 @@ int main()
           */
           pid.UpdateError(cte);
           steer_value = pid.TotalError();
-          std::cout << "Kp: " << pid.Kp << " p_error: " << pid.p_error << std::endl;
+          //std::cout << "Kp: " << pid.Kp << " p_error: " << pid.p_error << std::endl;
           if (steer_value > 1){
             steer_value = 1;
           }
@@ -70,7 +73,28 @@ int main()
           }
 
           // DEBUG
-          std::cout << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
+          std::cout << "iter No: " << pid.iter << "CTE: " << cte << " Steering Value: " << steer_value << std::endl;
+          if (pid.iter == 500) {
+            pid.SteadyState = 1;
+            pid.iter = 0;
+          }
+          if (pid.iter == pid.CoefUpdate && pid.SteadyState == 1) {
+          //if (0) {
+            double tolerance = 0.001;
+            double mcte = pid.total_sq_error/(pid.CoefUpdate/2); //as total error is calcuated for half of the iterations
+
+            // DEBUG Twiddle
+
+            std::cout << " mcte: " << mcte << std::endl;
+            pid.Twiddle(tolerance, mcte);
+            pid.Init(pid.params[0],pid.params[1],pid.params[2]);
+            std::cout << "dp_sum: " << pid.dp_sum << " best_error: " << pid.best_error << std::endl;
+            std::cout << "next_state: " << pid.next_state << " last_state: " << pid.last_state << std::endl;
+
+
+            std::cout << "Kp: " << pid.Kp << " Ki: " << pid.Ki << " Kd: " << pid.Kd << std::endl;
+          }
+
 
           json msgJson;
           msgJson["steering_angle"] = steer_value;
