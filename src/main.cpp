@@ -34,9 +34,9 @@ int main()
 
   PID pid;
   // TODO: Initialize the pid variable.
-  pid.Init(.15,.0001,1.5);
+  pid.Init(.15,.0001,2);
   pid.CoefUpdate = 50;
-  double d_params[3] = {.02,.00005,.2};
+  double d_params[3] = {.02,.0001,.2};
   pid.TwiddleInit(d_params);
 
 
