@@ -25,8 +25,8 @@ The PID Controller project has been developed in the same way as it was taught i
 * Twiddle algorithm is run with different update parameter ranging from 50 till 500, pid.CoefUpdate (main.cpp:line38). At the end optimum initial parameters values has been selected which were Kp = .15, Ki = .0002, Kd=2 and with update parameter of 200
 * In order that for every evaluation with change of PID parameters, first half of iterations within update duration didn't contribute wowards calculating the mean squared CTE (PID.cpp:line57). This allows us to converge the algorithm first based on new coefficients and then calculate the mean squared CTE.
 * For the first 500 the PID controller run only on initial selected parameters without any parameters update using Twiddle. This allows the car to throttle to its maximum selected speed and reach the steady state. (main.cpp:line79)
-* Final Result Video ![alt text][clip4]
+* Final Result Video [here][clip4]
 * Moreover to see the effect of PID separarely following clips were made
-1) P Result only with Kp = .15 ![alt text][clip1]. We can see the oscillation even on straight road
-2) PD Result only with Kp = .15, Kd=2 ![alt text][clip2]. We can see the oscillation problem has been improved
-3) PID Result only with Kp = .15, Kd=2, Ki = .0002 ![alt text][clip3]. Seems like the integral part didn't contribute much in further improving the result, indication of small value of system biasness 
+1) P Result only with Kp = .15 [here][clip1]. We can see the oscillation even on straight road
+2) PD Result only with Kp = .15, Kd=2 [here][clip2]. We can see the oscillation problem has been improved
+3) PID Result only with Kp = .15, Kd=2, Ki = .0002 [here][clip3]. Seems like the integral part didn't contribute much in further improving the result, indication of small value of system biasness 
