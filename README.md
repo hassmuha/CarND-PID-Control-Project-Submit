@@ -2,97 +2,31 @@
 Self-Driving Car Engineer Nanodegree Program
 
 ---
+[//]: # (Image References)
 
-## Dependencies
+[clip1]: https://youtu.be/R-c7kgNEGNQ "P_Result"
+[clip2]: https://youtu.be/MI_S1LyLZzI "PD_Result"
+[clip3]: https://youtu.be/8yHsKbEw-Ks "PID_Result"
+[clip4]: https://youtu.be/e5RhgDL2300 "Complete_Lap"
 
-* cmake >= 3.5
- * All OSes: [click here for installation instructions](https://cmake.org/install/)
-* make >= 4.1(mac, linux), 3.81(Windows)
-  * Linux: make is installed by default on most Linux distros
-  * Mac: [install Xcode command line tools to get make](https://developer.apple.com/xcode/features/)
-  * Windows: [Click here for installation instructions](http://gnuwin32.sourceforge.net/packages/make.htm)
-* gcc/g++ >= 5.4
-  * Linux: gcc / g++ is installed by default on most Linux distros
-  * Mac: same deal as make - [install Xcode command line tools]((https://developer.apple.com/xcode/features/)
-  * Windows: recommend using [MinGW](http://www.mingw.org/)
-* [uWebSockets](https://github.com/uWebSockets/uWebSockets)
-  * Run either `./install-mac.sh` or `./install-ubuntu.sh`.
-  * If you install from source, checkout to commit `e94b6e1`, i.e.
-    ```
-    git clone https://github.com/uWebSockets/uWebSockets 
-    cd uWebSockets
-    git checkout e94b6e1
-    ```
-    Some function signatures have changed in v0.14.x. See [this PR](https://github.com/udacity/CarND-MPC-Project/pull/3) for more details.
-* Simulator. You can download these from the [project intro page](https://github.com/udacity/self-driving-car-sim/releases) in the classroom.
 
-There's an experimental patch for windows in this [PR](https://github.com/udacity/CarND-PID-Control-Project/pull/3)
+---
 
-## Basic Build Instructions
+* Source Code can be found [here](https://github.com/hassmuha/CarND-PID-Control-Project-Submit/tree/master/src)
+* Compilation Result ./particle_filter can be found [here](https://github.com/hassmuha/CarND-PID-Control-Project-Submit/tree/master/build)
+* Video Clipping for the simulator results can be found here [here](https://github.com/hassmuha/CarND-PID-Control-Project-Submit/tree/master/Result)
 
-1. Clone this repo.
-2. Make a build directory: `mkdir build && cd build`
-3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+---
 
-Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
-
-## Editor Settings
-
-We've purposefully kept editor configuration files out of this repo in order to
-keep it as simple and environment agnostic as possible. However, we recommend
-using the following settings:
-
-* indent using spaces
-* set tab width to 2 spaces (keeps the matrices in source code aligned)
-
-## Code Style
-
-Please (do your best to) stick to [Google's C++ style guide](https://google.github.io/styleguide/cppguide.html).
-
-## Project Instructions and Rubric
-
-Note: regardless of the changes you make, your project must be buildable using
-cmake and make!
-
-More information is only accessible by people who are already enrolled in Term 2
-of CarND. If you are enrolled, see [the project page](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/f1820894-8322-4bb3-81aa-b26b3c6dcbaf/lessons/e8235395-22dd-4b87-88e0-d108c5e5bbf4/concepts/6a4d8d42-6a04-4aa6-b284-1697c0fd6562)
-for instructions and the project rubric.
-
-## Hints!
-
-* You don't have to follow this directory structure, but if you do, your work
-  will span all of the .cpp files here. Keep an eye out for TODOs.
-
-## Call for IDE Profiles Pull Requests
-
-Help your fellow students!
-
-We decided to create Makefiles with cmake to keep this project as platform
-agnostic as possible. Similarly, we omitted IDE profiles in order to we ensure
-that students don't feel pressured to use one IDE or another.
-
-However! I'd love to help people get up and running with their IDEs of choice.
-If you've created a profile for an IDE that you think other students would
-appreciate, we'd love to have you add the requisite profile files and
-instructions to ide_profiles/. For example if you wanted to add a VS Code
-profile, you'd add:
-
-* /ide_profiles/vscode/.vscode
-* /ide_profiles/vscode/README.md
-
-The README should explain what the profile does, how to take advantage of it,
-and how to install it.
-
-Frankly, I've never been involved in a project with multiple IDE profiles
-before. I believe the best way to handle this would be to keep them out of the
-repo root to avoid clutter. My expectation is that most profiles will include
-instructions to copy files to a new location to get picked up by the IDE, but
-that's just a guess.
-
-One last note here: regardless of the IDE used, every submitted project must
-still be compilable with cmake and make./
-
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
-
+### Key Points
+The PID Controller project has been developed in the same way as it was taught in the lecture
+* Started with P Controller first, then introducing the Differential part and at the end Integral part
+* Twiddle has been used to select the optimum parameters for P, I and D parts
+* Twiddle algorithm is run with different update parameter ranging from 50 till 500, pid.CoefUpdate (main.cpp:line38). At the end optimum initial parameters values has been selected which were Kp = .15, Ki = .0002, Kd=2 and with update parameter of 200
+* In order that for every evaluation with change of PID parameters, first half of iterations within update duration didn't contribute wowards calculating the mean squared CTE (PID.cpp:line57). This allows us to converge the algorithm first based on new coefficients and then calculate the mean squared CTE.
+* For the first 500 the PID controller run only on initial selected parameters without any parameters update using Twiddle. This allows the car to throttle to its maximum selected speed and reach the steady state. (main.cpp:line79)
+* Final Result Video ![alt text][clip4]
+* Moreover to see the effect of PID separarely following clips were made
+1) P Result only with Kp = .15 ![alt text][clip1]. We can see the oscillation even on straight road
+2) PD Result only with Kp = .15, Kd=2 ![alt text][clip2]. We can see the oscillation problem has been improved
+3) PID Result only with Kp = .15, Kd=2, Ki = .0002 ![alt text][clip3]. Seems like the integral part didn't contribute much in further improving the result, indication of small value of system biasness 
