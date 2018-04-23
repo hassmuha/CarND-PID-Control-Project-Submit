@@ -33,9 +33,11 @@ int main()
   uWS::Hub h;
 
   PID pid;
-  // TODO: Initialize the pid variable.
+  // PID values are initialized with optimum value
   pid.Init(.15,.0002,2);
-  pid.CoefUpdate = 300;
+  pid.CoefUpdate = 200;
+  // As parameters are already optimized and and a result of varying coefficient Update value
+  // there is no need to vary values a lot
   double d_params[3] = {.02,.0001,.2};
   pid.TwiddleInit(d_params);
 

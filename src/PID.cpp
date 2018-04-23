@@ -64,31 +64,34 @@ double PID::TotalError() {
 }
 
 void PID::Twiddle(double tol, double mcte) {
+  // if the sum of d_params already correspond to tolerance level, means the parameters has been optimized
   if (dp_sum < tol) {
     return;
   }
-  // In this state increase the one params[param_idx] by d_params[param_idx]
   if (next_state == 2) {
-    // this is main evaluation
+    // this is main evaluation to check whether to accept the new value for the parameter
     if (mcte < best_error) {
       best_error = mcte;
       d_params[param_idx] *= 1.1;
       next_state = 0;
     } else {
+      // last_state = 1 means that the parameter has been checked for both increased and decreased value
+      // and now as there is no improvement so change the d_param to lower value for fine tunning
       if (last_state == 1) {
         // update the para
         params[param_idx] += d_params[param_idx];
         d_params[param_idx] *= 0.9;
         next_state = 0;
       } else {
-        //
+        // last_state is 0 and we have already checked parameter with increased value and it does not bring any improvement
+        // change the parameter with lower value
         next_state = 1;
       }
     }
     last_state = 2;
   }
 
-
+  // In this state increase the one params[param_idx] by d_params[param_idx]
   if (next_state == 0){ // this means increase the param_idx and add the d_param and evaluate in next iteration
     if (last_state == 2) {    // only false for the first time otherwise always true
       param_idx++;
@@ -112,35 +115,3 @@ void PID::Twiddle(double tol, double mcte) {
     dp_sum += d_params[i];
 	}
 }
-/*
-def twiddle(tol=0.2):
-    p = [0, 0, 0]
-    dp = [1, 1, 1]
-    robot = make_robot()
-    x_trajectory, y_trajectory, best_err = run(robot, p)
-
-    it = 0
-    while sum(dp) > tol:
-        print("Iteration {}, best error = {}".format(it, best_err))
-        for i in range(len(p)):
-            p[i] += dp[i]
-            robot = make_robot()
-            x_trajectory, y_trajectory, err = run(robot, p)
-
-            if err < best_err:
-                best_err = err
-                dp[i] *= 1.1
-            else:
-                p[i] -= 2 * dp[i]
-                robot = make_robot()
-                x_trajectory, y_trajectory, err = run(robot, p)
-
-                if err < best_err:
-                    best_err = err
-                    dp[i] *= 1.1
-                else:
-                    p[i] += dp[i]
-                    dp[i] *= 0.9
-        it += 1
-    return p
-*/
